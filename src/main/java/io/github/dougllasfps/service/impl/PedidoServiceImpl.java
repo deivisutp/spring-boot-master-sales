@@ -7,7 +7,7 @@ import io.github.dougllasfps.domain.entity.Produto;
 import io.github.dougllasfps.domain.enums.StatusPedido;
 import io.github.dougllasfps.domain.repository.Clientes;
 import io.github.dougllasfps.domain.repository.ItemsPedido;
-import io.github.dougllasfps.domain.repository.Pedidos;
+import io.github.dougllasfps.domain.repository.PedidosRepository;
 import io.github.dougllasfps.domain.repository.Produtos;
 import io.github.dougllasfps.exception.PedidoNaoEncontradoException;
 import io.github.dougllasfps.exception.RegraNegocioException;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PedidoServiceImpl implements PedidoService {
 
-    private final Pedidos repository;
+    private final PedidosRepository repository;
     private final Clientes clientesRepository;
     private final Produtos produtosRepository;
     private final ItemsPedido itemsPedidoRepository;
@@ -93,4 +93,6 @@ public class PedidoServiceImpl implements PedidoService {
                 }).collect(Collectors.toList());
 
     }
+
+
 }

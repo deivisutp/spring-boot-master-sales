@@ -3,11 +3,17 @@ package io.github.dougllasfps.rest.controller;
 import io.github.dougllasfps.domain.entity.ItemPedido;
 import io.github.dougllasfps.domain.entity.Pedido;
 import io.github.dougllasfps.domain.enums.StatusPedido;
+import io.github.dougllasfps.domain.repository.filter.PedidoFilter;
 import io.github.dougllasfps.rest.dto.AtualizacaoStatusPedidoDTO;
 import io.github.dougllasfps.rest.dto.InformacaoItemPedidoDTO;
 import io.github.dougllasfps.rest.dto.InformacoesPedidoDTO;
 import io.github.dougllasfps.rest.dto.PedidoDTO;
 import io.github.dougllasfps.service.PedidoService;
+import io.github.dougllasfps.service.impl.PedidoRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +32,9 @@ import static org.springframework.http.HttpStatus.*;
 public class PedidoController {
 
     private PedidoService service;
+
+    @Autowired
+    private PedidoRepositoryImpl pedidoRepository;
 
     public PedidoController(PedidoService service) {
         this.service = service;
@@ -53,6 +62,15 @@ public class PedidoController {
                              @RequestBody AtualizacaoStatusPedidoDTO dto){
         String novoStatus = dto.getNovoStatus();
         service.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
+    }
+
+    @GetMapping("/customPedido")
+    @ResponseBody
+    public Page<PedidoDTO> resumo(@RequestParam(value = "search", required = false) PedidoFilter search,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "3") int size) {
+        Pageable paging = PageRequest.of(page, size);
+        return  pedidoRepository.resumo(search, paging);
     }
 
     private InformacoesPedidoDTO converter(Pedido pedido){
